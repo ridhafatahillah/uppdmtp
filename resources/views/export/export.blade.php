@@ -10,12 +10,26 @@
 <table>
     <thead>
         <tr>
-            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">LAPORAN PEMAKAIAN SKPD </th>
+            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">LAPORAN PEMAKAIAN SURAT
+                KETETAPAN PAJAK DAERAH </th>
         </tr>
         <tr>
-            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">UPPD MARTAPURA</th>
+            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">UNIT PELAYANAN PENDAPATAN
+                DAERAH MARTAPURA </th>
         </tr>
-        <tr></tr>
+        <tr>
+            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">TAHUN {{ date('Y') }}
+            </th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center; font-weight: bold;">{{ $nama }}</th>
+
+        </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: center; font-weight: bold;">Kasir: {{ $nama_kasir }}</th>
+        </tr>
         <tr>
             <th style="text-align: center;">No</th>
             <th style="text-align: center;">Notice</th>

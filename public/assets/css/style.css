@@ -740,7 +740,6 @@ h6 {
 }
 
 .sidebar-nav .nav-content a i {
-    font-size: 6px;
     margin-right: 8px;
     line-height: 0;
     border-radius: 50%;
@@ -749,10 +748,6 @@ h6 {
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
     color: #4154f1;
-}
-
-.sidebar-nav .nav-content a.active i {
-    background-color: #4154f1;
 }
 
 /*--------------------------------------------------------------

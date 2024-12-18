@@ -14,28 +14,32 @@ class RekapController extends Controller
 {
     public function index(Request $request)
     {
-        $model = new noticeModels();
+        $model = noticeModels::query()->where('users_id', Auth::user()->id);
+        $modelRaw = new noticeModels();
         $userName = Auth::user()->name;
 
         // Mengatur nama tabel secara dinamis
-        $model->setTable($userName);
+
 
         $bulan = $request->input('month', date('Y-m'));
         $bulanIni = Carbon::parse($bulan)->locale('id')->translatedFormat('F Y');
-        $dataPerHari = $model::selectRaw('tanggal, sum(total_pajak) as total_pajak, count(*) as total_notes, 
+        $dataPerHari = $modelRaw::selectRaw('tanggal, sum(total_pajak) as total_pajak, count(*) as total_notes, 
         max(no_notice) as notes_akhir, min(no_notice) as notes_awal, count(case when kondisi = "rusak" then 1 end) as notes_batal')
             ->whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
             ->groupBy('tanggal')
+            ->where('users_id', Auth::user()->id)
             ->get()
             ->keyBy('tanggal');
 
         // dd($dataPerHari);
-        $data = $model::whereYear('tanggal', Carbon::parse($bulan)->year)
+        $data = $modelRaw::whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
+            ->where('users_id', Auth::user()->id)
             ->get();
-        $rusakData = $model::select('tanggal', 'no_notice')
+        $rusakData = $modelRaw::select('tanggal', 'no_notice')
             ->where('kondisi', 'rusak')
+            ->where('users_id', Auth::user()->id)
             ->whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
             ->get()

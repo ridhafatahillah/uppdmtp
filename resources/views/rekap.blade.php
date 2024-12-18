@@ -134,10 +134,9 @@
         </section>
     </main>
 </body>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/js/main.js"></script>
-
+<script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+<script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ asset('assets/js/main.js') }}"></script>
 <script>
     function filterByMonth() {
         var selectedMonth = document.getElementById('monthInput').value;
@@ -149,6 +148,6 @@
 
     document.getElementById('download').addEventListener('click', function() {
         var selectedMonth = document.getElementById('monthInput').value;
-        window.location.href = '/export_rekap?month=' + selectedMonth;
+        window.location.href = '/export_rekap?month=' + selectedMonth + '&id={{ auth()->user()->id }}';
     });
 </script>

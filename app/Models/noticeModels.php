@@ -27,7 +27,7 @@ class noticeModels extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
-    // Nama tabel tidak didefinisikan di sini
+    protected $table = "kasir";
 
     protected $fillable = [
         'tanggal',
@@ -39,14 +39,11 @@ class noticeModels extends Model
         'keterangan',
         'kondisi',
         'baru',
+        'users_id',
     ];
 
-    public function __construct(array $attributes = [])
+    public function user()
     {
-        // Set table name dynamically based on the authenticated user's name
-        $userName = Auth::user()->name;
-        $this->setTable($userName);
-
-        parent::__construct($attributes);
+        return $this->belongsTo(User::class, 'users_id', 'id');
     }
 }

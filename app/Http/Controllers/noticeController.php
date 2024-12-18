@@ -3,38 +3,52 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
+use App\Exports\ExportData;
 use App\Models\noticeModels;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportData;
 
 class noticeController extends Controller
 {
     public function index(Request $request)
     {
-        // Membuat instance model
-        $model = new noticeModels();
+        // Mendapatkan user ID dan nama
+        $userId = Auth::user()->id;
         $userName = Auth::user()->name;
 
-        // Mengatur nama tabel secara dinamis
-        $model->setTable($userName);
-
-
+        // Mengatur tanggal yang dipilih atau default ke hari ini
         $selectedDate = $request->input('date', date('Y-m-d'));
         $selectedDates = Carbon::parse($selectedDate)->locale('id')->translatedFormat('d F Y');
-        $noticetambahh = $model::whereDate('tanggal', $selectedDate)->max('no_notice');
-        $data = $model::whereDate('tanggal', $selectedDate)->get();
-        $jumlahdata = $model::whereDate('tanggal', $selectedDate)->count();
-        $noticebatal = $model::whereDate('tanggal', $selectedDate)->where('kondisi', 'rusak')->count();
-        $totalpajak = $model::whereDate('tanggal', $selectedDate)->sum('total_pajak');
-        // dd($data);
 
+        // Query berdasarkan tanggal dan user ID
+        $noticetambahh = noticeModels::where('users_id', $userId)
+            ->whereDate('tanggal', $selectedDate)
+            ->max('no_notice');
+
+        $data = noticeModels::where('users_id', $userId)
+            ->whereDate('tanggal', $selectedDate)
+            ->get();
+
+        $jumlahdata = noticeModels::where('users_id', $userId)
+            ->whereDate('tanggal', $selectedDate)
+            ->count();
+
+        $noticebatal = noticeModels::where('users_id', $userId)
+            ->whereDate('tanggal', $selectedDate)
+            ->where('kondisi', 'rusak')
+            ->count();
+
+        $totalpajak = noticeModels::where('users_id', $userId)
+            ->whereDate('tanggal', $selectedDate)
+            ->sum('total_pajak');
+
+        // Menentukan nilai increment untuk no_notice
         if ($noticetambahh) {
-            // Increment nilai maksimum
-            $noticetambah = str_pad((int)$noticetambahh + 1, strlen($noticetambahh), '0', STR_PAD_LEFT);
+            $noticetambah = str_pad((int) $noticetambahh + 1, strlen($noticetambahh), '0', STR_PAD_LEFT);
         } else {
-            // Jika tidak ada nilai, mulai dari '00000001' atau format yang sesuai
             $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT); // Misalnya, 8 digit
         }
 
@@ -46,18 +60,18 @@ class noticeController extends Controller
 
     public function storeData(Request $request)
     {
-        // Validasi input ketika no_notice sudah ada di tanggal yang sama
+        // Validasi input untuk memastikan `no_notice` unik pada tanggal dan users_id yang sama
         $request->validate([
-            'no_notice' => 'unique:App\Models\noticeModels,no_notice,NULL,id,tanggal,' . $request->tanggal,
+            'no_notice' => [
+                'required',
+                Rule::unique('kasir')->where(function ($query) use ($request) {
+                    return $query->where('tanggal', $request->tanggal)
+                        ->where('users_id', Auth::user()->id);
+                }),
+            ],
         ]);
 
-        // Membuat instance model
-        $model = new noticeModels();
-        $userName = Auth::user()->name;
-
-        // Mengatur nama tabel secara dinamis
-        $model->setTable($userName);
-
+        // Data yang akan disimpan
         $data = [
             'tanggal' => $request->tanggal,
             'no_notice' => $request->no_notice,
@@ -68,12 +82,14 @@ class noticeController extends Controller
             'keterangan' => $request->keterangan,
             'kondisi' => $request->kondisi,
             'baru' => $request->baru,
+            'users_id' => Auth::user()->id,
         ];
-        // dd($data);
 
-        $model::create($data);
-        // redirect ke tanggal yang sama
-        return redirect('/?date=' . $request->tanggal);
+        // Simpan data menggunakan model `noticeModels`
+        noticeModels::create($data);
+
+        // Redirect ke tanggal yang sama
+        return redirect('/?date=' . $request->tanggal)->with('success', 'Data berhasil disimpan.');
     }
 
     public function export_excel(Request $request)
@@ -126,5 +142,55 @@ class noticeController extends Controller
 
 
         return redirect('/?date=' . $request->tanggal);
+    }
+
+    public function admin()
+    {
+        $data = noticeModels::all();
+        return view('admin', compact('data'))->with('judul', 'Admin | SIPSKPD');
+    }
+
+    public function profile()
+    {
+        return view('profile')->with('judul', 'Profile | SIPSKPD');
+    }
+
+    public function profileEdit(Request $request)
+    {
+
+        $user = auth()->user();
+        if (password_verify($request->password, $user->password)) {
+            $user->nama_kasir = $request->nama_kasir;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Profil berhasil diperbarui');
+        } else {
+            // Jika password tidak cocok
+            return redirect()->back()->with('error', 'Password salah');
+        }
+    }
+
+
+    public function changePassword(Request $request)
+    {
+
+        $request->validate([
+            'password' => 'required',
+            'newpassword' => 'required',
+            'renewpassword' => 'required|same:newpassword',
+        ], [
+            'password.required' => 'Password lama harus diisi',
+            'newpassword.required' => 'Password baru harus diisi',
+            'renewpassword.required' => 'Konfirmasi password baru harus diisi',
+            'renewpassword.same' => 'Password baru dan konfirmasi password baru harus sama',
+        ]);
+        $user = User::where('id', $request->id)->first();
+        if (password_verify($request->password, $user->password)) {
+            $user->password = bcrypt($request->newpassword);
+            $user->save();
+            return redirect()->back()->with('success', 'Password berhasil diubah');
+        } else {
+            return redirect()->back()->with('error', 'Password lama salah');
+        }
     }
 }

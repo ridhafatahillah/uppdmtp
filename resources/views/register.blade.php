@@ -33,6 +33,12 @@
                                         method="post">
                                         @csrf
                                         <div class="col-12">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" name="username" class="form-control" id="username"
+                                                required>
+                                            <div class="invalid-feedback">Please, enter username</div>
+                                        </div>
+                                        <div class="col-12">
                                             <label for="yourName" class="form-label">Your Name</label>
                                             <input type="text" name="name" class="form-control" id="yourName"
                                                 required>

@@ -18,6 +18,12 @@ class isLogin
         if (!auth()->check()) {
             return redirect('login');
         }
+
+        if (auth()->user()->role == 1) {
+            return redirect('/admin')->withErrors(
+                ['access_denied' => 'Anda Admin']
+            );
+        }
         return $next($request);
     }
 }

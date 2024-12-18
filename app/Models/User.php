@@ -18,8 +18,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nama',
         'email',
         'password',
+        'role',
+        'nama_kasir'
     ];
 
     /**
@@ -43,5 +46,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function notice()
+    {
+        return $this->hasMany(noticeModels::class, 'users_id', 'id');
     }
 }

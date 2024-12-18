@@ -27,7 +27,11 @@ class LoginController extends Controller
 
         if (Auth::attempt($dataa)) {
             // $request->session()->regenerate();
-            return redirect('');
+            if (auth()->user()->role == 0) {
+                return redirect('/');
+            } elseif (auth()->user()->role == 1) {
+                return redirect('admin');
+            }
         } else {
             return redirect('login')->with('error', 'Username atau Password salah');
         }
@@ -42,16 +46,22 @@ class LoginController extends Controller
 
     public function postRegister(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'password' => 'required',
-            'email' => 'required'
-        ]);
+        // $request->validate([
+        //     'name' => 'required',
+        //     'username' => 'required',
+        //     'password' => 'required',
+        //     'email' => 'required'
+        // ]);
+
+        // dd($request->all());
         $hashedPassword = bcrypt($request->password);
         $dataa = [
-            'name' => $request->name,
+            'nama' => $request->name,
+            'name' => $request->username,
             'password' => $hashedPassword,
-            'email' => $request->email
+            'email' => $request->email,
+            //isi 'role' dengan true jika ingin membuat user sebagai admin
+            'role' => true
         ];
         $user = User::create($dataa);
         if ($user) {

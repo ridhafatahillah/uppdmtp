@@ -23,7 +23,7 @@
                     {{ $tanggal }} </h6>
                 <h6 class="mx-2 fw d-none d-md-table-cell">I</h6>
                 <h6 id="clock" class="fw-bold"> {{ date('H:i') }}</h6> --}}
-                <h6>{{ Auth::user()->nama }}</h6>
+                <h6>{{ Auth::user()->nama_kasir }}</h6>
             </li>
         </ul>
     </nav>

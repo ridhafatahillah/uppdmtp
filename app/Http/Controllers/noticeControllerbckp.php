@@ -71,6 +71,11 @@ class noticeController extends Controller
         noticeModels::where('no_notice', $request->no_notice)->update($data);
         return redirect('/')->with('status', 'Data berhasil diubah!');
     }
+    function admin()
+    {
+        $data = noticeModels::all();
+        return view('admin', compact('data'), ['judul' => 'Samsat Martapura - Admin']);
+    }
 
     // function exportview(Request $request)
     // {

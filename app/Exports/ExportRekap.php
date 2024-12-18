@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\User;
 use App\Models\noticeModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Contracts\View\View;
@@ -39,8 +40,10 @@ class ExportRekap implements FromView, ShouldAutoSize, WithStyles
         $model = new noticeModels();
         $userName = Auth::user()->name;
 
+        $id = Request::input('id');
         // Mengatur nama tabel secara dinamis
         $model->setTable($userName);
+        $nama_kasir = User::where('id', $id)->first()->nama;
 
         $bulan = Request::input('month', date('Y-m'));
         $bulanIni = Carbon::parse($bulan)->locale('id')->translatedFormat('F Y');
@@ -48,6 +51,7 @@ class ExportRekap implements FromView, ShouldAutoSize, WithStyles
         max(no_notice) as notes_akhir, min(no_notice) as notes_awal, count(case when kondisi = "rusak" then 1 end) as notes_batal')
             ->whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
+            ->where('users_id', $id)
             ->groupBy('tanggal')
             ->get()
             ->keyBy('tanggal');
@@ -55,9 +59,11 @@ class ExportRekap implements FromView, ShouldAutoSize, WithStyles
 
         $data = $model::whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
+            ->where('users_id', $id)
             ->get();
         $rusakData = $model::select('tanggal', 'no_notice')
             ->where('kondisi', 'rusak')
+            ->where('users_id', $id)
             ->whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
             ->get()
@@ -82,7 +88,7 @@ class ExportRekap implements FromView, ShouldAutoSize, WithStyles
         // dd($dataPerHari);
         return view(
             'export.rekapexport',
-            compact('data', 'jumlahData', 'noticeBatal', 'totalPajak', 'dataPerHari', 'bulanIni')
+            compact('data', 'jumlahData', 'noticeBatal', 'totalPajak', 'dataPerHari', 'bulanIni', 'nama_kasir')
         );
     }
 }

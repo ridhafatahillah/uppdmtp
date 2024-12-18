@@ -43,6 +43,11 @@
                                 {{ session('error') }}
                             </div>
                         @endif
+                        @if ($errors->has('belumLogin'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ $errors->first('belumLogin') }}
+                            </div>
+                        @endif
                         @error('password')
                             <div class="alert alert-danger" role="alert">
                                 Kata Sandi diperlukan

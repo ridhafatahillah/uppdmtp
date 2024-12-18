@@ -17,7 +17,7 @@
             <th colspan="2" style="font-weight: bold; text-align: center;">{{ $bulanIni }}</th>
         </tr>
         <tr>
-            <th colspan="2" style="font-weight: bold; text-align: center;">{{ Auth::user()->nama }}</th>
+            <th colspan="2" style="font-weight: bold; text-align: center;">{{ $nama_kasir }}</th>
             {{-- <th colspan="2"></th> --}}
         </tr>
         <tr>

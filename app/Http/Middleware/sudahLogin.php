@@ -16,7 +16,15 @@ class sudahLogin
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check()) {
-            return redirect('');
+            if (auth()->user()->role == 1) {
+                return redirect()->route('admin');
+            } elseif (auth()->user()->role == 0) {
+                return redirect('/')->withErrors(
+                    ['sudahLogin' => 'Anda sudah login']
+                );
+            } else {
+                return redirect('aaa');
+            }
         }
         return $next($request);
     }

@@ -104,18 +104,7 @@
                                                     @endforeach
                                                 </div>
                                             @endif --}}
-                                            @if ($errors->any())
-                                                <script>
-                                                    document.addEventListener('DOMContentLoaded', function() {
-                                                        Swal.fire({
-                                                            icon: 'error',
-                                                            title: 'Oops...',
-                                                            text: 'No Notes sudah ada!',
-                                                            confirmButtonText: 'OK'
-                                                        });
-                                                    });
-                                                </script>
-                                            @endif
+
                                         </div>
 
                                         <div class="col-4 d-flex justify-content-end align-items-center ">
@@ -358,7 +347,42 @@
         $('#nopol').focus();
     });
 </script>
-
+@if ($errors->has('sudahLogin'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ $errors->first('sudahLogin') }}',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
+@if ($errors->has('no_notice'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No Notes sudah ada!',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
+@if ($errors->has('access_denied'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ $errors->first('access_denied') }}',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
 <script>
     // buat sweet alert ketika tombol id=delete ditekan 
     $(document).on('click', '#delete', function(e) {
@@ -390,5 +414,6 @@
         }
     });
 </script>
+
 
 </html>
