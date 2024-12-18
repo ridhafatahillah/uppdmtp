@@ -18,7 +18,6 @@ class RekapController extends Controller
         $modelRaw = new noticeModels();
         $userName = Auth::user()->name;
 
-        // Mengatur nama tabel secara dinamis
 
 
         $bulan = $request->input('month', date('Y-m'));
@@ -53,10 +52,10 @@ class RekapController extends Controller
         $dataPerHari->transform(function ($item) use ($rusakData) {
             $tanggal = $item->tanggal;
 
-            // Ambil no_notice rusak untuk tanggal yang sesuai
+
             $noNoticeRusak = $rusakData->get($tanggal, collect())->pluck('no_notice');
 
-            // Tambahkan no_notice rusak ke data agregat
+
             $item->no_notice_rusak = $noNoticeRusak;
 
             return $item;

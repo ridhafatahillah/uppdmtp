@@ -60,7 +60,6 @@ class LoginController extends Controller
             'name' => $request->username,
             'password' => $hashedPassword,
             'email' => $request->email,
-            //isi 'role' dengan true jika ingin membuat user sebagai admin
             'role' => true
         ];
         $user = User::create($dataa);

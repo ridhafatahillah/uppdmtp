@@ -15,15 +15,15 @@ class noticeController extends Controller
 {
     public function index(Request $request)
     {
-        // Mendapatkan user ID dan nama
+
         $userId = Auth::user()->id;
         $userName = Auth::user()->name;
 
-        // Mengatur tanggal yang dipilih atau default ke hari ini
+
         $selectedDate = $request->input('date', date('Y-m-d'));
         $selectedDates = Carbon::parse($selectedDate)->locale('id')->translatedFormat('d F Y');
 
-        // Query berdasarkan tanggal dan user ID
+
         $noticetambahh = noticeModels::where('users_id', $userId)
             ->whereDate('tanggal', $selectedDate)
             ->max('no_notice');
@@ -45,11 +45,10 @@ class noticeController extends Controller
             ->whereDate('tanggal', $selectedDate)
             ->sum('total_pajak');
 
-        // Menentukan nilai increment untuk no_notice
         if ($noticetambahh) {
             $noticetambah = str_pad((int) $noticetambahh + 1, strlen($noticetambahh), '0', STR_PAD_LEFT);
         } else {
-            $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT); // Misalnya, 8 digit
+            $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT);
         }
 
         return view(
@@ -60,7 +59,7 @@ class noticeController extends Controller
 
     public function storeData(Request $request)
     {
-        // Validasi input untuk memastikan `no_notice` unik pada tanggal dan users_id yang sama
+
         $request->validate([
             'no_notice' => [
                 'required',
@@ -71,7 +70,6 @@ class noticeController extends Controller
             ],
         ]);
 
-        // Data yang akan disimpan
         $data = [
             'tanggal' => $request->tanggal,
             'no_notice' => $request->no_notice,
@@ -85,10 +83,8 @@ class noticeController extends Controller
             'users_id' => Auth::user()->id,
         ];
 
-        // Simpan data menggunakan model `noticeModels`
         noticeModels::create($data);
 
-        // Redirect ke tanggal yang sama
         return redirect('/?date=' . $request->tanggal)->with('success', 'Data berhasil disimpan.');
     }
 
@@ -101,14 +97,11 @@ class noticeController extends Controller
 
     public function updateData(Request $request)
     {
-        // Validasi input
 
-
-        // Membuat instance model
         $model = new noticeModels();
         $userName = Auth::user()->name;
 
-        // Mengatur nama tabel secara dinamis
+
         $model->setTable($userName);
 
         $data = [
@@ -131,11 +124,11 @@ class noticeController extends Controller
     }
     public function deleteData(Request $request)
     {
-        // Membuat instance model
+
         $model = new noticeModels();
         $userName = Auth::user()->name;
 
-        // Mengatur nama tabel secara dinamis
+
         $model->setTable($userName);
 
         $model::where('id', $request->id)->delete();
@@ -165,7 +158,6 @@ class noticeController extends Controller
 
             return redirect()->back()->with('success', 'Profil berhasil diperbarui');
         } else {
-            // Jika password tidak cocok
             return redirect()->back()->with('error', 'Password salah');
         }
     }

@@ -26,28 +26,28 @@ class adminController extends Controller
         $kasirPerHari = noticeModels::selectRaw('users_id, tanggal, sum(total_pajak) as total_pajak')
             ->whereBetween('tanggal', [$startDate, $endDate])
             ->groupBy('users_id', 'tanggal')
-            ->with('user') // Ambil relasi user
+            ->with('user')
             ->get()
             ->groupBy('users_id');
 
-        // Membuat array tanggal untuk kategori sumbu X
+
         $dates = [];
         foreach ($startDate->daysUntil($endDate) as $date) {
-            $dates[] = $date->format('Y-m-d'); // Format tanggal
+            $dates[] = $date->format('Y-m-d');
         }
 
-        // Menyiapkan data untuk ApexCharts
+
         $chartData = [];
         foreach ($kasirPerHari as $usersID => $items) {
             $userData = [
-                'name' => $items->first()->user->name, // Mengambil nama kasir
+                'name' => $items->first()->user->name,
                 'data' => [],
             ];
 
-            // Mengisi data untuk setiap tanggal yang ada di $dates
+
             foreach ($dates as $date) {
-                $pajakPerHari = $items->firstWhere('tanggal', $date); // Ambil pajak berdasarkan tanggal
-                $userData['data'][] = $pajakPerHari ? (float) $pajakPerHari->total_pajak : 0; // Menambahkan data pajak atau 0 jika tidak ada
+                $pajakPerHari = $items->firstWhere('tanggal', $date);
+                $userData['data'][] = $pajakPerHari ? (float) $pajakPerHari->total_pajak : 0;
             }
 
             $chartData[] = $userData;
@@ -65,7 +65,7 @@ class adminController extends Controller
         $selectedDates = Carbon::parse($selectedDate)->locale('id')->translatedFormat('d F Y');
 
         $users = User::where('role', 0)
-            ->orderBy('name', 'asc') // Mengurutkan berdasarkan nama secara abjad (A-Z)
+            ->orderBy('name', 'asc')
             ->get();
 
         $data = noticeModels::where('users_id', $id)->whereDate('tanggal', $selectedDate)->get();
@@ -85,7 +85,7 @@ class adminController extends Controller
         if ($noticetambahh) {
             $noticetambah = str_pad((int) $noticetambahh + 1, strlen($noticetambahh), '0', STR_PAD_LEFT);
         } else {
-            $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT); // Misalnya, 8 digit
+            $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT);
         }
         return view('admin/adminkasir', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates', 'noticetambah'));
     }
@@ -98,7 +98,7 @@ class adminController extends Controller
         $kasir = User::where('id', $id)->first();
         // dd($kasir);
         $users = User::where('role', 0)
-            ->orderBy('name', 'asc') // Mengurutkan berdasarkan nama secara abjad (A-Z)
+            ->orderBy('name', 'asc')
             ->get();
         $bulan = $request->input('month', date('Y-m'));
         $bulanIni = Carbon::parse($bulan)->locale('id')->translatedFormat('F Y');
@@ -111,7 +111,7 @@ class adminController extends Controller
             ->get()
             ->keyBy('tanggal');
 
-        // dd($dataPerHari);
+
         $data = $modelRaw::whereYear('tanggal', Carbon::parse($bulan)->year)
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
             ->where('users_id', $id)
@@ -123,8 +123,6 @@ class adminController extends Controller
             ->whereMonth('tanggal', Carbon::parse($bulan)->month)
             ->get()
             ->groupBy('tanggal');
-        // dd($dataPerHari);
-        // dd($data);
         $jumlahData = $data->count();
         $noNoticeRusak = $data->where('kondisi', 'rusak')->pluck('no_notice');
         $noticeBatal = $data->where('kondisi', 'rusak')->count();
@@ -132,15 +130,12 @@ class adminController extends Controller
         $dataPerHari->transform(function ($item) use ($rusakData) {
             $tanggal = $item->tanggal;
 
-            // Ambil no_notice rusak untuk tanggal yang sesuai
             $noNoticeRusak = $rusakData->get($tanggal, collect())->pluck('no_notice');
 
-            // Tambahkan no_notice rusak ke data agregat
             $item->no_notice_rusak = $noNoticeRusak;
 
             return $item;
         });
-        // dd($dataPerHari);
 
         return view(
             'admin/adminrekap',
@@ -153,12 +148,11 @@ class adminController extends Controller
         $judul = "Admin";
         $usersAkun = User::all()->sortBy('name');
         $users = User::where('role', 0)
-            ->orderBy('name', 'asc') // Mengurutkan berdasarkan nama secara abjad (A-Z)
+            ->orderBy('name', 'asc')
             ->get();
         $kasirCount = User::where('role', 0)->count();
         $adminCount = User::where('role', 1)->count();
         $all = User::all()->count();
-        // dd($usersCount);
         return view('admin/akun', compact('judul', 'users', 'kasirCount', 'adminCount', 'all', 'usersAkun'));
     }
 
@@ -168,7 +162,7 @@ class adminController extends Controller
             'nama' => 'required',
             'username' => [
                 'required',
-                'unique:users,name', // Unik di tabel "users" pada kolom "username"
+                'unique:users,name',
             ],
             'password' => 'required',
         ]);
@@ -181,7 +175,7 @@ class adminController extends Controller
             'password' => $hashedPassword,
             'role' => 0,
         ];
-        // dd($dataa);
+
         $user = User::create($dataa);
         if ($user) {
             return redirect()->back()->with('success', 'Akun berhasil ditambahkan');
@@ -198,7 +192,7 @@ class adminController extends Controller
             'role' => 0,
         ];
 
-        // dd($request->all());
+
 
         $user = User::where('id', $request->idEdit)->update($data);
         if ($user) {
@@ -210,10 +204,10 @@ class adminController extends Controller
 
     public function hapusAkun($id)
     {
-        // Menghapus data yang terkait di tabel kasir
+
         noticeModels::where('users_id', $id)->delete();
 
-        // Menghapus data user
+
         $user = User::where('id', $id)->delete();
         if ($user) {
             return redirect()->back()->with('success', 'Akun berhasil dihapus');
@@ -225,17 +219,14 @@ class adminController extends Controller
 
     public function gantiPassword(Request $request, $id)
     {
-        // Validasi password yang baru
 
-
-        // Temukan user berdasarkan ID
         $user = User::findOrFail($id);
 
-        // Update password user dengan hash baru
-        $user->password = bcrypt($request->password);
-        $user->save(); // Simpan perubahan ke database
 
-        // Kembalikan response JSON
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+
         return response()->json(['message' => 'Password berhasil diperbarui!'], 200);
     }
 
@@ -262,7 +253,7 @@ class adminController extends Controller
     {
         $judul = "Admin";
         $users = User::where('role', 0)
-            ->orderBy('name', 'asc') // Mengurutkan berdasarkan nama secara abjad (A-Z)
+            ->orderBy('name', 'asc')
             ->get();
         return view('admin/profile', compact('judul', 'users'));
     }
@@ -271,9 +262,9 @@ class adminController extends Controller
     {
 
         $request->validate([
-            'password' => 'required', // Validasi untuk password lama
-            'newpassword' => 'required', // Validasi untuk password baru
-            'renewpassword' => 'required|same:newpassword', // Validasi untuk konfirmasi password baru
+            'password' => 'required',
+            'newpassword' => 'required',
+            'renewpassword' => 'required|same:newpassword',
         ], [
             'password.required' => 'Password lama harus diisi',
             'newpassword.required' => 'Password baru harus diisi',
