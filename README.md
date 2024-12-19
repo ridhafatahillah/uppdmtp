@@ -1,4 +1,6 @@
-![Logo Provinsi Kalimantan Selatan](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Coat_of_arms_of_South_Kalimantan.svg/429px-Coat_of_arms_of_South_Kalimantan.svg.png)
+<div align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Coat_of_arms_of_South_Kalimantan.svg/1200px-Coat_of_arms_of_South_Kalimantan.svg.png" alt="Logo Provinsi Kalimantan Selatan" width="200">
+</div>
 
 # SIPSKPD (Sistem Informasi Pencatatan Surat Ketetapan Pajak Daerah)
 
