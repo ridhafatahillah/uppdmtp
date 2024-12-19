@@ -26,7 +26,7 @@
                                 width="60px" alt="Logo" />
 
                             <p class="mb-0">Selamat Datang</p>
-                            di Aplikasi SIPSKPD
+                            di Aplikasi SIPSKPDAAAAAAAAAAAAA
                             </h4>
                             <p
                                 style="
