@@ -25,7 +25,7 @@ Route::post('profile/change-password', [noticeController::class, 'changePassword
 
 
 Route::post('storeData', [noticeController::class, 'storeData'])->name('storeData');
-Route::get('export_excel', [noticeController::class, 'export_excel'])->name('export_excel')->middleware(sudahLogin::class);
+Route::get('export_excel', [noticeController::class, 'export_excel'])->name('export_excel')->middleware(isLogin::class);
 Route::post('updateData/', [noticeController::class, 'updateData'])->name('updateData');
 Route::get('delete/{id}/{tanggal}', [noticeController::class, 'deleteData'])->name('deleteData');
 Route::get('export_rekap', [RekapController::class, 'export_rekap'])->name('export_rekap');

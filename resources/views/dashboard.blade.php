@@ -320,7 +320,7 @@
 
     function exportExcelByDate() {
         var selectedDate = document.getElementById('dateInput').value;
-        window.location.href = '/export_excel?date=' + selectedDate;
+        window.location.href = '/export_excel?date=' + selectedDate + '&id=' + '{{ Auth::user()->id }}';
     }
 
     // Mendeteksi perubahan pada input date dan menerapkan filter

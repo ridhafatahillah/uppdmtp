@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $event->no_notice }}</td>
+                    <td>{{ str_pad($event->no_notice, 7, '0', STR_PAD_LEFT) }}</td>
                     <td>DA</td>
                     <td>{{ $event->no_polisi }}</td>
                     <td>{{ $event->nama }}</td>
