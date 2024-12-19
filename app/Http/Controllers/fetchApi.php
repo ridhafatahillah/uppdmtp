@@ -14,8 +14,8 @@ class fetchApi extends Controller
     {
         // fetch ke api.test/api/plat dengan method get
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . '10|olxkVSS5PPwkADHFPGvKmdFAB7ctgDRHM9Lc7EhRdeb4a60f',
-        ])->get('http://api.test/api/plat?plat=' . $request->plat);
+            'Authorization' => 'Bearer ' . '12|00lHMbmVHX1Y8iTkcMVan6yCNdJCH8plMgnws27I1722c6b3',
+        ])->get('http://apiuppd.studiomuda.com/api/plat?plat=' . $request->plat);
         // buat header authorization
         // mengambil data dari response
         $data = $response->json();

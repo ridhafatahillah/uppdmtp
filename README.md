@@ -27,11 +27,11 @@ SIPSKPD adalah aplikasi web yang bikin pencatatan Surat Ketetapan Pajak Daerah (
 
 1. Clone proyek ini:
     ```bash
-    git clone https://github.com/username/sipskpd.git
+    git clone https://github.com/ridhafatahillah/uppdmtp.git
     ```
 2. Masuk ke folder proyek:
     ```bash
-    cd sipskpd
+    cd uppdmtp
     ```
 3. Install dependensi:
     ```bash

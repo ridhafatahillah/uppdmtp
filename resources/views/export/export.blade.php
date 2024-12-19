@@ -76,7 +76,7 @@
                     <td>
                         {{ formatRupiah($event->total_pajak) }}
                     </td>
-                    <td>
+                    <td style="text-align: left;">
                         {{ $event->keterangan }}
                     </td>
                 </tr>
@@ -91,7 +91,7 @@
                     <td>
                         {{ formatRupiah($event->total_pajak) }}
                     </td>
-                    <td>
+                    <td style="text-align: left;">
                         {{ $event->keterangan }}
                     </td>
                 </tr>
