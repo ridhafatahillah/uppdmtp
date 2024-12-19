@@ -31,7 +31,7 @@ SIPSKPD adalah aplikasi web yang bikin pencatatan Surat Ketetapan Pajak Daerah (
     ```
 2. Masuk ke folder proyek:
     ```bash
-    cd uppdmtp
+    cd sipskpd
     ```
 3. Install dependensi:
     ```bash
