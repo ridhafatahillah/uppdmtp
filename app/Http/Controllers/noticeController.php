@@ -85,7 +85,7 @@ class noticeController extends Controller
 
         noticeModels::create($data);
 
-        return redirect('/?date=' . $request->tanggal)->with('success', 'Data berhasil disimpan.');
+        return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil disimpan.');
     }
 
     public function export_excel(Request $request)
@@ -120,7 +120,7 @@ class noticeController extends Controller
 
         $model::where('id', $request->id)->update($data);
 
-        return redirect('/?date=' . $request->tanggal);
+        return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil diubah.');
     }
     public function deleteData(Request $request)
     {
@@ -134,7 +134,7 @@ class noticeController extends Controller
         $model::where('id', $request->id)->delete();
 
 
-        return redirect('/?date=' . $request->tanggal);
+        return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil dihapus.');
     }
 
     public function admin()

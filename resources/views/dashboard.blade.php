@@ -383,6 +383,18 @@
         });
     </script>
 @endif
+@if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
 <script>
     // buat sweet alert ketika tombol id=delete ditekan 
     $(document).on('click', '#delete', function(e) {
