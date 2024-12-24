@@ -18,8 +18,12 @@
                     <div class="container-fluid" id="alert-container"></div>
                     <form action="/storeData" method="post" id="formNotice">
                         @csrf
+                        @if (auth()->user()->role == 1)
+                            <input type="text" value={{ $id }} name="user_id" hidden>
+                        @else
+                        @endif
                         <input type="date" value={{ $tanggal }} name="tanggal" class="form-control"
-                            class="mb-1" style="width: 150px;">
+                            class="mb-1" style="width: 150px;" hidden>
                         <div class="mb-3">
                             <label for="nama" class="form-label">No Notes</label>
                             <input type="number" class="form-control" id="no_notice" name="no_notice"
@@ -154,4 +158,6 @@
     });
 </script>
 
-<script src="assets/js/api.js"></script>
+
+
+<script src="{{ asset('assets/js/api.js') }}"></script>

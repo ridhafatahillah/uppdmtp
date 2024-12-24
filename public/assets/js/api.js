@@ -2,7 +2,7 @@ const caridataaa = document.getElementById("caridataaa");
 caridataaa.addEventListener("click", function () {
     const nopol = document.getElementById("nopol").value;
     console.log(nopol);
-    fetch(`api/plat?plat=${nopol}`)
+    fetch(`api/plat?plat=` + nopol)
         .then((response) => response.json())
         .then((responseData) => {
             console.log("Response Received:", responseData);

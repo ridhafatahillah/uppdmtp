@@ -65,9 +65,10 @@ class noticeController extends Controller
                 'required',
                 Rule::unique('kasir')->where(function ($query) use ($request) {
                     return $query->where('tanggal', $request->tanggal)
-                        ->where('users_id', Auth::user()->id);
+                        ->where('users_id', $request->user_id  ?? Auth::user()->id);;
                 }),
             ],
+            'total_pajak' => 'numeric|min:0',
         ]);
 
         $data = [
@@ -80,12 +81,16 @@ class noticeController extends Controller
             'keterangan' => $request->keterangan,
             'kondisi' => $request->kondisi,
             'baru' => $request->baru,
-            'users_id' => Auth::user()->id,
+            'users_id' => $request->user_id ?? Auth::user()->id,
         ];
+        // dd($data);
 
         noticeModels::create($data);
-
-        return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil disimpan.');
+        if (Auth::user()->role == 0) {
+            return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil disimpan.');
+        } else {
+            return redirect('/admin/kasir/' . $request->user_id . '?date=' . $request->tanggal)->with('success', 'Notes berhasil disimpan.');
+        }
     }
 
     public function export_excel(Request $request)
@@ -120,9 +125,9 @@ class noticeController extends Controller
 
         $model::where('id', $request->id)->update($data);
 
-        return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil diubah.');
+        return redirect()->back()->with('success', 'Data berhasil diubah.');
     }
-    public function deleteData(Request $request)
+    public function deleteData($id, Request $request)
     {
 
         $model = new noticeModels();
@@ -133,8 +138,10 @@ class noticeController extends Controller
 
         $model::where('id', $request->id)->delete();
 
+        // dd($request->all());
 
-        return redirect('/?date=' . $request->tanggal)->with('success', 'Notes berhasil dihapus.');
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 
     public function admin()

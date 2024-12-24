@@ -34,6 +34,9 @@ class noticeController extends Controller
 
     public function storeData(Request $request)
     {
+        $request->validate([
+            'no_notice' => 'required',
+        ]);
         $data = [
             'tanggal' => $request->tanggal,
             'no_notice' => $request->no_notice,
@@ -44,9 +47,8 @@ class noticeController extends Controller
             'keterangan' => $request->keterangan,
         ];
         noticeModels::create($data);
-        // dd($data);
 
-        return redirect('/')->with('status', 'Data berhasil ditambahkan!');
+        return redirect('/')->with('status', 'Data berhasil ditambahkan!')->withErrors($request);
     }
 
     function export_excel(Request $request)

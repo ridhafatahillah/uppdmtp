@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExportData implements FromView, ShouldAutoSize, WithStyles, WithTitle
+class ExportLaporan implements FromView, ShouldAutoSize, WithStyles, WithTitle
 {
     // public function columnWidths(): array
     // {
@@ -27,7 +27,7 @@ class ExportData implements FromView, ShouldAutoSize, WithStyles, WithTitle
     public function styles(Worksheet $sheet)
     {
         // Apply borders to the entire range of data
-        $sheet->getStyle('A7:H' . ($sheet->getHighestRow()))
+        $sheet->getStyle('A5:I' . ($sheet->getHighestRow()))
             ->applyFromArray([
                 'borders' => [
                     'allBorders' => [
@@ -45,25 +45,18 @@ class ExportData implements FromView, ShouldAutoSize, WithStyles, WithTitle
     public function view(): View
     {
         $selectedDate = Request::input('date', date('d m Y'));
-        $selectedKasir = Request::input('id', Auth::user()->id);
         $total = noticeModels::whereDate('tanggal', $selectedDate)
-            ->where('users_id', $selectedKasir)
+
             ->sum('total_pajak');
         $data = noticeModels::whereDate('tanggal', $selectedDate)
-            ->where('users_id', $selectedKasir)
             ->get();
-        $kasir = User::where('id', $selectedKasir)->first();
-        $nama = $kasir->nama;
-        $nama_kasir = $kasir->nama_kasir;
-
         // dd($nama);
 
-        return view('export.export', [
+        return view('export.laporanharian', [
             'data' => $data,
             'total' => $total,
-            'nama' => $nama,
-            'nama_kasir' => $nama_kasir,
-            'tanggal' => $selectedDate,
+            'tanggal' => $selectedDate
+
         ]);
     }
 

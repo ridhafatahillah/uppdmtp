@@ -1,6 +1,14 @@
+@props(['active' => false, 'icon' => ''])
+
+@php
+    $classes = $active ? 'nav-link' : 'nav-link collapsed';
+@endphp
+
 <li class="nav-item">
-    <a class="nav-link {{ $active ? '' : 'collapsed' }}" {{ $attributes }}>
-        <i class="{{ $icon }}"></i>
+    <a class="{{ $classes }}" {{ $attributes }}>
+        @if ($icon)
+            <i class="{{ $icon }}"></i>
+        @endif
         <span>{{ $slot }}</span>
     </a>
 </li>

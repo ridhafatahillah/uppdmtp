@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
+use Jenssegers\Agent\Facades\Agent;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Jenssegers\Agent\Facades\Agent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('enddesktop', function () {
             return "<?php endif; ?>";
         });
+        Carbon::setLocale('id');
     }
 
     public function register()

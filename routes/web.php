@@ -21,9 +21,6 @@ Route::get('rekap', [RekapController::class, 'index'])->middleware(isLogin::clas
 Route::get('profile', [noticeController::class, 'profile'])->middleware(isLogin::class);
 Route::post('profile/edit', [noticeController::class, 'profileEdit'])->name('profileEdit');
 Route::post('profile/change-password', [noticeController::class, 'changePassword']);
-
-
-
 Route::post('storeData', [noticeController::class, 'storeData'])->name('storeData');
 Route::get('export_excel', [noticeController::class, 'export_excel'])->name('export_excel')->middleware(isLogin::class);
 Route::post('updateData/', [noticeController::class, 'updateData'])->name('updateData');
@@ -44,4 +41,9 @@ Route::middleware('auth', RoleMiddleware::class)->group(function () {
     Route::get('admin/akun/hapus/{id}', [adminController::class, 'hapusAkun'])->name('hapusAkun');
     Route::get('admin/profile', [adminController::class, 'profile'])->name('profile');
     Route::post('admin/profile/change-password', [adminController::class, 'changePassword'])->name('changePassword');
+    Route::get('admin/kasir/api/plat', [fetchApi::class, 'index']);
+    Route::get('admin/kasir/delete/{id}/{tanggal}', [noticeController::class, 'deleteData']);
+    Route::post('admin/kasir/updateData', [noticeController::class, 'updateData']);
+    Route::get('admin/laporan/', [adminController::class, 'laporan'])->name('laporan');
+    Route::get('admin/laporan/excel', [adminController::class, 'laporan_excel'])->name('laporan_excel');
 });

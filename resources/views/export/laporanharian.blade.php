@@ -10,25 +10,16 @@
 <table>
     <thead>
         <tr>
-            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">LAPORAN PEMAKAIAN SURAT
+            <th colspan="9" style="text-align: center; font-size: 16px; font-weight: bold">LAPORAN PEMAKAIAN SURAT
                 KETETAPAN PAJAK DAERAH </th>
         </tr>
         <tr>
-            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">UNIT PELAYANAN PENDAPATAN
+            <th colspan="9" style="text-align: center; font-size: 16px; font-weight: bold">UNIT PELAYANAN PENDAPATAN
                 DAERAH MARTAPURA </th>
         </tr>
         <tr>
-            <th colspan="8" style="text-align: center; font-size: 16px; font-weight: bold">TAHUN {{ date('Y') }}
+            <th colspan="9" style="text-align: center; font-size: 16px; font-weight: bold">TAHUN {{ date('Y') }}
             </th>
-        </tr>
-        <tr>
-            <th></th>
-            <th style="text-align: center; font-weight: bold;">{{ $nama }}</th>
-
-        </tr>
-        <tr>
-            <th></th>
-            <th style="text-align: center; font-weight: bold;">Kasir: {{ $nama_kasir }}</th>
         </tr>
         <tr>
             <th></th>
@@ -37,6 +28,7 @@
             </th>
 
         </tr>
+
         <tr>
             <th style="text-align: center;">No</th>
             <th style="text-align: center;">Notice</th>
@@ -45,6 +37,8 @@
             <th style="text-align: center;">Alamat</th>
             <th style="text-align: center;">Biaya Pajak</th>
             <th style="text-align: center;">Ket.</th>
+            <th style="text-align: center;">Kasir</th>
+
         </tr>
     </thead>
     <tbody>
@@ -86,6 +80,7 @@
                     <td style="text-align: left;">
                         {{ $event->keterangan }}
                     </td>
+                    <td>{{ $event->user->nama_kasir }}</td>
                 </tr>
             @else
                 <tr>
@@ -101,6 +96,7 @@
                     <td style="text-align: left;">
                         {{ $event->keterangan }}
                     </td>
+                    <td>{{ $event->user->nama_kasir }}</td>
                 </tr>
             @endif
         @endforeach

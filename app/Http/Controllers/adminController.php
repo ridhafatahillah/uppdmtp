@@ -8,6 +8,7 @@ use App\Exports\ExportData;
 use App\Exports\ExportRekap;
 use App\Models\noticeModels;
 use Illuminate\Http\Request;
+use App\Exports\ExportLaporan;
 use Maatwebsite\Excel\Facades\Excel;
 
 class adminController extends Controller
@@ -56,6 +57,35 @@ class adminController extends Controller
         return view('admin/admin', compact('judul', 'users', 'totalNotes', 'totalPajak', 'notesRusak', 'dates', 'kasirPerHari', 'chartData'));
     }
 
+    public function laporan(Request $request)
+    {
+        $judul = "Admin";
+        $selectedDate = $request->input('date', date('Y-m-d'));
+        $selectedDates = Carbon::parse($selectedDate)->locale('id')->translatedFormat('d F Y');
+
+        $users = User::where('role', 0)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $data = noticeModels::whereDate('tanggal', $selectedDate)->with('user')->get();
+        $kasir = User::all();
+        $totalNotes = noticeModels::whereDate('tanggal', $selectedDate)
+            ->count();
+        $totalPajak = noticeModels::whereDate('tanggal', $selectedDate)
+            ->sum('total_pajak');
+        $notesRusak = noticeModels::whereDate('tanggal', $selectedDate)
+            ->where('kondisi', 'rusak')->count();
+        $noticetambahh = noticeModels::whereDate('tanggal', $selectedDate)
+            ->max('no_notice');
+        if ($noticetambahh) {
+            $noticetambah = str_pad((int) $noticetambahh + 1, strlen($noticetambahh), '0', STR_PAD_LEFT);
+        } else {
+            $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT);
+        }
+
+        return view('admin/laporan', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates', 'noticetambah'));
+    }
+
 
     public function kasir($id, Request $request)
     {
@@ -87,7 +117,7 @@ class adminController extends Controller
         } else {
             $noticetambah = str_pad(1, 8, '0', STR_PAD_LEFT);
         }
-        return view('admin/adminkasir', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates', 'noticetambah'));
+        return view('admin/adminkasir', compact('judul', 'id', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates', 'noticetambah'));
     }
 
     public function rekap(Request $request)
@@ -246,6 +276,13 @@ class adminController extends Controller
         $selectedmonth = $request->input('month', date('Y-m'));
         $bulan = getIndonesianMonth(Carbon::parse($selectedmonth)->format('m'));
         return Excel::download(new ExportRekap, $nama_kasir . ' ' . 'REKAP ' . $bulan . '.xlsx');
+    }
+
+    public function laporan_excel(Request $request)
+    {
+        $selectedDate = $request->input('date', date('Y-m-d'));
+        $dateConvert = Carbon::parse($selectedDate)->format('d') . ' ' . getIndonesianMonth(Carbon::parse($selectedDate)->format('m'));
+        return Excel::download(new ExportLaporan, 'Laporan ' . $dateConvert . '.xlsx');
     }
 
 
