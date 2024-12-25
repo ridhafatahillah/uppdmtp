@@ -76,30 +76,55 @@
                             <div class="card recent-sales overflow-auto">
 
                                 <div class="card-body">
+                                    <ul class="nav nav-tabs nav-tabs-bordered">
+                                        <li class="nav-item ">
+                                            <a href="{{ url('admin/laporan') }}"
+                                                class="nav-link {{ request()->url() == url('admin/laporan') ? 'active' : '' }}">Perhari</a>
+                                        </li>
+                                        <li class="nav-item ">
+                                            <a href="{{ url('admin/laporan/perbulan') }}"
+                                                class="nav-link {{ request()->url() == url('admin/laporan/perbulan') ? 'active' : '' }}">Perbulan</a>
+                                        </li>
+                                        <li class="nav-item ">
+                                            <a href="{{ url('admin/laporan/pertahun') }}"
+                                                class="nav-link {{ request()->url() == url('admin/laporan/pertahun') ? 'active' : '' }}">Pertahun</a>
+                                        </li>
+                                    </ul>
 
                                     {{-- buat 2 kolom bersampingan --}}
                                     <div class="row">
                                         <div class="col-4">
                                             <h5 class="card-title
-                                        ">Laporan Data
-                                                Perhari
+                                        ">Laporan
+                                                Pemakaian SKPD {{ $judul }}
                                             </h5>
                                         </div>
 
-                                        <div class="col-4 d-flex justify-content-center align-items-center mt-2 ">
-                                            {{-- @if ($errors->any())
-                                                <div class="alert alert-danger" style="width : 200px; height : 50px">
-                                                    @foreach ($errors->all() as $error)
-                                                        <p>No notice sudah ada</p>
-                                                    @endforeach
-                                                </div>
-                                            @endif --}}
+                                        {{-- <div class="col-4 d-flex justify-content-center align-items-center mt-2 ">
 
-                                        </div>
 
-                                        <div class="col-4 d-flex justify-content-end align-items-center ">
-                                            <input type="date" class="form-control form-control-sm ms-2 "
-                                                style="width: 150px;" id="dateInput" value={{ $selectedDate }}>
+                                        </div> --}}
+
+                                        <div class="col-8 d-flex justify-content-end align-items-center ">
+                                            @if (request()->is('admin/laporan'))
+                                                <input type="date" class="form-control form-control-sm ms-2 "
+                                                    style="width: 150px;" id="dateInput" value="{{ $selectedDate }}">
+                                            @elseif (request()->is('admin/laporan/perbulan'))
+                                                <input type="month" class="form-control form-control-sm ms-2 "
+                                                    style="width: 150px;" id="dateInput" value="{{ $selectedDate }}">
+                                            @else
+                                                <select class="form-select form-select-sm " style="width: 150px;"
+                                                    id="dateInput">
+                                                    @for ($year = 2000; $year <= now()->year; $year++)
+                                                        <option value="{{ $year }}"
+                                                            {{ $year == $selectedDate->year ? 'selected' : '' }}>
+                                                            {{ $year }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
+                                            @endif
+
+
                                             <a class="float-end text-warning-subtle ms-2 fs-4" type="button"
                                                 id='download'><i class="bi bi-file-earmark-spreadsheet-fill"></i></a>
                                         </div>

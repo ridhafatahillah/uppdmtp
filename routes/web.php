@@ -45,5 +45,8 @@ Route::middleware('auth', RoleMiddleware::class)->group(function () {
     Route::get('admin/kasir/delete/{id}/{tanggal}', [noticeController::class, 'deleteData']);
     Route::post('admin/kasir/updateData', [noticeController::class, 'updateData']);
     Route::get('admin/laporan/', [adminController::class, 'laporan'])->name('laporan');
+    Route::get('admin/laporan/perbulan', [adminController::class, 'laporan_perbulan'])->name('laporan_perbulan');
+    Route::get('admin/laporan/perhari', [adminController::class, 'laporan_perhari'])->name('laporan_perhari');
+    Route::get('admin/laporan/pertahun', [adminController::class, 'laporan_pertahun'])->name('laporan_pertahun');
     Route::get('admin/laporan/excel', [adminController::class, 'laporan_excel'])->name('laporan_excel');
 });

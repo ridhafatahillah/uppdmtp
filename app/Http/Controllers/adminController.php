@@ -59,7 +59,7 @@ class adminController extends Controller
 
     public function laporan(Request $request)
     {
-        $judul = "Admin";
+        $judul = "Perhari";
         $selectedDate = $request->input('date', date('Y-m-d'));
         $selectedDates = Carbon::parse($selectedDate)->locale('id')->translatedFormat('d F Y');
 
@@ -85,6 +85,81 @@ class adminController extends Controller
 
         return view('admin/laporan', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates', 'noticetambah'));
     }
+
+    public function laporan_perbulan(Request $request)
+    {
+        $judul = "Perbulan";
+        $selectedDate = $request->input('date', date('Y-m'));
+        $selectedDates = Carbon::parse($selectedDate)->locale('id')->translatedFormat('F Y');
+
+        $users = User::where('role', 0)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $data = noticeModels::whereYear('tanggal', Carbon::parse($selectedDate)->year)
+            ->whereMonth('tanggal', Carbon::parse($selectedDate)->month)
+            ->with('user')
+            ->get();
+        $kasir = User::all();
+        $totalNotes = noticeModels::whereYear('tanggal', Carbon::parse($selectedDate)->year)
+            ->whereMonth('tanggal', Carbon::parse($selectedDate)->month)
+            ->count();
+        $totalPajak = noticeModels::whereYear('tanggal', Carbon::parse($selectedDate)->year)
+            ->whereMonth('tanggal', Carbon::parse($selectedDate)->month)
+            ->sum('total_pajak');
+        $notesRusak = noticeModels::whereYear('tanggal', Carbon::parse($selectedDate)->year)
+            ->whereMonth('tanggal', Carbon::parse($selectedDate)->month)
+            ->where('kondisi', 'rusak')->count();
+
+        return view('admin/laporan', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates'));
+    }
+
+    public function laporan_pertahun(Request $request)
+    {
+        $judul = "Pertahun";
+
+        // Ambil input 'date' dari request, jika tidak ada maka default ke tahun sekarang
+        $selectedDate = $request->input('date', date('Y'));
+
+        // Pastikan $selectedDate adalah tahun dalam format yang benar
+        $selectedDate = Carbon::createFromFormat('Y', $selectedDate);
+
+        // Format tanggal yang dipilih menjadi format tahun (Y) untuk ditampilkan
+        $selectedDates = $selectedDate->locale('id')->translatedFormat('Y');
+
+        // Ambil tahun dari $selectedDate
+        $year = $selectedDate->year; // Mengambil tahun sebagai integer
+
+        // Ambil data pengguna dengan role 0
+        $users = User::where('role', 0)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        // Ambil data notices yang sesuai dengan tahun yang dipilih
+        $data = noticeModels::whereYear('tanggal', $year)
+            ->with('user') // Load relasi 'user' untuk data notices
+            ->get();
+
+        // Ambil data kasir (semua pengguna)
+        $kasir = User::all();
+
+        // Total jumlah notices untuk tahun yang dipilih
+        $totalNotes = noticeModels::whereYear('tanggal', $year)
+            ->count();
+
+        // Total pajak untuk tahun yang dipilih
+        $totalPajak = noticeModels::whereYear('tanggal', $year)
+            ->sum('total_pajak');
+
+        // Jumlah notices rusak untuk tahun yang dipilih
+        $notesRusak = noticeModels::whereYear('tanggal', $year)
+            ->where('kondisi', 'rusak')
+            ->count();
+        return view('admin/laporan', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates'));
+    }
+
+
+
 
 
     public function kasir($id, Request $request)

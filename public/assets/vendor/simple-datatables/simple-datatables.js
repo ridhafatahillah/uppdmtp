@@ -6037,7 +6037,7 @@
                                     format: "YYYY-MM-DD",
                                     columns: [],
                                     paging: !0,
-                                    perPage: -1,
+                                    perPage: 10,
                                     perPageSelect: [5, 10, 15, 20, 25],
                                     nextPrev: !0,
                                     firstLast: !1,

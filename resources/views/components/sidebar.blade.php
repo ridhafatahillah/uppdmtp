@@ -53,7 +53,7 @@
         </ul>
         <span>Laporan</span>
         <ul class="sidebar-nav" id="sidebar-nav">
-            {{-- buat pengaturan selayaknya admin --}}
+            {{-- buat pengaturan selayaknya admin
             <li class="nav-item">
                 <a class="nav-link {{ request()->url() == url('admin/laporan/') || request()->fullUrl() == url('admin/laporan') ? '' : 'collapsed' }}"
                     data-bs-target="#components-nav-laporan" data-bs-toggle="collapse" href="#">
@@ -81,10 +81,12 @@
                         </a>
                     </li>
                 </ul>
-            </li>
-            {{-- <x-nav-link href="{{ url('admin/laporan') }}" :active="request()->is('admin/laporan')">
+            </li> --}}
+            <x-nav-link href="{{ url('admin/laporan') }}" :active="request()->is('admin/laporan') ||
+                request()->is('admin/laporan/perbulan') ||
+                request()->is('admin/laporan/pertahun')">
                 <x-slot:icon>bi bi-file-earmark-fill"</x-slot:icon>
-                Laporan</x-nav-link> --}}
+                Laporan</x-nav-link>
         </ul>
 
         <span>Pengaturan</span>
