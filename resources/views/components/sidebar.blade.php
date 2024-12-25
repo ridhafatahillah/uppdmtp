@@ -17,7 +17,7 @@
         </ul>
     @else
         @props(['users'])
-        <span>Data</span>
+        <span>Home</span>
         <ul class="sidebar-nav" id="sidebar-nav">
             <x-nav-link href="/admin" :active="request()->is('admin')">
                 <x-slot:icon>bi bi-grid</x-slot:icon>

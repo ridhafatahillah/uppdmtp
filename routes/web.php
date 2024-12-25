@@ -47,6 +47,8 @@ Route::middleware('auth', RoleMiddleware::class)->group(function () {
     Route::get('admin/laporan/', [adminController::class, 'laporan'])->name('laporan');
     Route::get('admin/laporan/perbulan', [adminController::class, 'laporan_perbulan'])->name('laporan_perbulan');
     Route::get('admin/laporan/perhari', [adminController::class, 'laporan_perhari'])->name('laporan_perhari');
-    Route::get('admin/laporan/pertahun', [adminController::class, 'laporan_pertahun'])->name('laporan_pertahun');
+    Route::get('admin/laporan/pertahun', [adminController::class, 'laporan_pertahun'])->name('laporan_pertaun');
     Route::get('admin/laporan/excel', [adminController::class, 'laporan_excel'])->name('laporan_excel');
+    Route::get('admin/laporan/perbulan/excel/', [adminController::class, 'laporan_excel_perbulan'])->name('laporan_excel_perbulan');
+    Route::get('admin/laporan/pertahun/excel/', [adminController::class, 'laporan_excel_pertahun'])->name('laporan_excel_pertahun');
 });

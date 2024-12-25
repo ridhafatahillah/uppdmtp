@@ -18,19 +18,21 @@
                 DAERAH MARTAPURA </th>
         </tr>
         <tr>
-            <th colspan="9" style="text-align: center; font-size: 16px; font-weight: bold">TAHUN {{ date('Y') }}
+            <th colspan="9" style="text-align: center; font-size: 16px; font-weight: bold">TAHUN
+                {{ \Carbon\Carbon::parse($tanggal)->locale('id')->isoFormat('YYYY') }}
             </th>
         </tr>
         <tr>
             <th></th>
             <th style="text-align: center; font-weight: bold;">
-                {{ \Carbon\Carbon::parse($tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
+                Tahun : {{ \Carbon\Carbon::parse($tanggal)->locale('id')->isoFormat('YYYY') }}
             </th>
 
         </tr>
 
         <tr>
             <th style="text-align: center;">No</th>
+            <th style="text-align: center;">Tanggal</th>
             <th style="text-align: center;">Notice</th>
             <th colspan="2" style="text-align: center;"> No. Polisi</th>
             <th style="text-align: center;">Nama</th>
@@ -46,7 +48,7 @@
             @if ($event->kondisi == 'rusak')
                 @if ($event->baru == 'on')
                     <tr>
-                        <td colspan="8"
+                        <td colspan="9"
                             style="text-align: center; background-color: #ffc107; font-weight: bold; color: white;">
                             BARU
                         </td>
@@ -54,21 +56,24 @@
                 @endif
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ \Carbon\Carbon::parse($event->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
                     <td>{{ str_pad($event->no_notice, 7, '0', STR_PAD_LEFT) }}</td>
                     <td colspan="6"
                         style="text-align: center; background-color: #dc3545; font-weight: bold; color: white;">
                         BATAL
                     </td>
+                    <td>{{ $event->user->nama_kasir }}</td>
                 </tr>
             @elseif ($event->baru == 'on')
                 <tr>
-                    <td colspan="8"
+                    <td colspan="9"
                         style="text-align: center; background-color: #ffc107; font-weight: bold; color: white;">
                         BARU
                     </td>
                 </tr>
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ \Carbon\Carbon::parse($event->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
                     <td>{{ str_pad($event->no_notice, 7, '0', STR_PAD_LEFT) }}</td>
                     <td>DA</td>
                     <td>{{ $event->no_polisi }}</td>
@@ -85,6 +90,7 @@
             @else
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ \Carbon\Carbon::parse($event->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
                     <td>{{ str_pad($event->no_notice, 7, '0', STR_PAD_LEFT) }}</td>
                     <td>DA</td>
                     <td>{{ $event->no_polisi }}</td>
@@ -101,7 +107,7 @@
             @endif
         @endforeach
         <tr>
-            <td colspan="6" style="text-align: right; font-weight: bold;  text-align: center;">Total</td>
+            <td colspan="7" style="text-align: right; font-weight: bold;  text-align: center;">Total</td>
             <td style="font-weight: bold;">{{ formatrupiah($total) }}</td>
             <td></td>
         </tr>

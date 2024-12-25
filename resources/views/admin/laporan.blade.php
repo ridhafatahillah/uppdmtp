@@ -115,7 +115,7 @@
                                             @else
                                                 <select class="form-select form-select-sm " style="width: 150px;"
                                                     id="dateInput">
-                                                    @for ($year = 2000; $year <= now()->year; $year++)
+                                                    @for ($year = 2010; $year <= now()->year; $year++)
                                                         <option value="{{ $year }}"
                                                             {{ $year == $selectedDate->year ? 'selected' : '' }}>
                                                             {{ $year }}
@@ -277,14 +277,21 @@
         window.location.href = '/admin/laporan/' + 'excel?date=' + selectedDate;
     }
 
+    function exportExcelByMonth() {
+        var selectedDate = document.getElementById('dateInput').value;
+        window.location.href = '/admin/laporan/perbulan/' + 'excel?date=' + selectedDate;
+    }
+
+    function exportExcelByYear() {
+        var selectedDate = document.getElementById('dateInput').value;
+        window.location.href = '/admin/laporan/pertahun/' + 'excel?date=' + selectedDate;
+    }
+
     // Mendeteksi perubahan pada input date dan menerapkan filter
     document.getElementById('dateInput').addEventListener('change', function() {
         filterByDate();
     });
 
-    document.getElementById('download').addEventListener('click', function() {
-        exportExcelByDate();
-    });
 
     // Mendeteksi perubahan pada input date ketika tombol Enter ditekan
     document.getElementById('dateInput').addEventListener('keydown', function(event) {
@@ -301,6 +308,25 @@
         $('#nopol').focus();
     });
 </script>
+@if (request()->is('admin/laporan'))
+    <script>
+        document.getElementById('download').addEventListener('click', function() {
+            exportExcelByDate();
+        });
+    </script>
+@elseif (request()->is('admin/laporan/perbulan'))
+    <script>
+        document.getElementById('download').addEventListener('click', function() {
+            exportExcelByMonth();
+        });
+    </script>
+@else
+    <script>
+        document.getElementById('download').addEventListener('click', function() {
+            exportExcelByYear();
+        });
+    </script>
+@endif
 @if (session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {

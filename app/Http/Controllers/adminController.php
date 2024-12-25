@@ -10,6 +10,8 @@ use App\Models\noticeModels;
 use Illuminate\Http\Request;
 use App\Exports\ExportLaporan;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportLaporanBulanan;
+use App\Exports\ExportLaporanTahunan;
 
 class adminController extends Controller
 {
@@ -118,19 +120,16 @@ class adminController extends Controller
     {
         $judul = "Pertahun";
 
-        // Ambil input 'date' dari request, jika tidak ada maka default ke tahun sekarang
         $selectedDate = $request->input('date', date('Y'));
 
-        // Pastikan $selectedDate adalah tahun dalam format yang benar
         $selectedDate = Carbon::createFromFormat('Y', $selectedDate);
 
-        // Format tanggal yang dipilih menjadi format tahun (Y) untuk ditampilkan
         $selectedDates = $selectedDate->locale('id')->translatedFormat('Y');
 
-        // Ambil tahun dari $selectedDate
-        $year = $selectedDate->year; // Mengambil tahun sebagai integer
 
-        // Ambil data pengguna dengan role 0
+        $year = $selectedDate->year;
+
+
         $users = User::where('role', 0)
             ->orderBy('name', 'asc')
             ->get();
@@ -157,10 +156,6 @@ class adminController extends Controller
             ->count();
         return view('admin/laporan', compact('judul', 'users', 'data', 'kasir', 'totalNotes', 'totalPajak', 'notesRusak', 'selectedDate', 'selectedDates'));
     }
-
-
-
-
 
     public function kasir($id, Request $request)
     {
@@ -359,6 +354,23 @@ class adminController extends Controller
         $dateConvert = Carbon::parse($selectedDate)->format('d') . ' ' . getIndonesianMonth(Carbon::parse($selectedDate)->format('m'));
         return Excel::download(new ExportLaporan, 'Laporan ' . $dateConvert . '.xlsx');
     }
+
+    public function laporan_excel_perbulan(Request $request)
+    {
+        $selectedDate = $request->input('date', date('Y-m'));
+        $dateConvert = getIndonesianMonth(Carbon::parse($selectedDate)->format('m')) . ' ' . Carbon::parse($selectedDate)->format('Y');
+        return Excel::download(new ExportLaporanBulanan, 'Laporan ' . $dateConvert . '.xlsx');
+    }
+
+    public function laporan_excel_pertahun(Request $request)
+    {
+        $selectedDate = $request->input('date', date('Y'));
+        $dateConvert = Carbon::parse($selectedDate)->format('Y');
+        return Excel::download(new ExportLaporanTahunan, 'Laporan ' . $dateConvert . '.xlsx');
+    }
+
+
+
 
 
     public function profile()

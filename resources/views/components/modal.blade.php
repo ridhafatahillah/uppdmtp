@@ -30,17 +30,13 @@
                                 value={{ $notice }}>
                             <div class="mt-2">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <input type="checkbox" id="noticeBaru" name="baru">
                                         <label for="noticeBaru">Notes Baru</label>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <input type="checkbox" id="noticeBatal" name="kondisi" value="rusak">
                                         <label for="noticeBatal">Notes Batal</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <input type="checkbox" id="noticeRusak" name="rusak">
-                                        <label for="noticeRusak">Notes Rusak</label>
                                     </div>
                                 </div>
 
