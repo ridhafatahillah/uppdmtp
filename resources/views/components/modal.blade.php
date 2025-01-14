@@ -133,7 +133,7 @@
                 nama.value = "";
                 nopol.value = "";
                 alamat.value = "";
-                total_pajak.value = "";
+                total_pajak.value = "0";
                 keterangan.value = "";
                 nama.readOnly = true;
                 nopol.readOnly = true;
