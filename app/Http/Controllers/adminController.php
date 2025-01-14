@@ -196,7 +196,7 @@ class adminController extends Controller
         $modelRaw = new noticeModels();
         $id = $request->input('id');
         $kasir = User::where('id', $id)->first();
-        // dd($kasir);
+        // dd($request->all());
         $users = User::where('role', 0)
             ->orderBy('name', 'asc')
             ->get();

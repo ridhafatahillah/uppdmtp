@@ -142,7 +142,7 @@
 <script>
     function filterByMonth() {
         var selectedMonth = document.getElementById('monthInput').value;
-        window.location.href = '?month=' + selectedMonth;
+        window.location.href = '?month=' + selectedMonth + '&id=' + {{ $kasir->id }};
     }
     document.getElementById('monthInput').addEventListener('change', function() {
         filterByMonth();
